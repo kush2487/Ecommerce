@@ -23,9 +23,58 @@ def changing_api(request):
 
 @api_view(['GET'])
 def get_products(request):
-    data = Products.objects.all()
-    serializerProducts = ProductSerializer(data, many = True)
-    return Response(serializerProducts.data)
+    # data = Products.objects.all()
+    # serializerProducts = ProductSerializer(data, many = True)
+    # return Response(serializerProducts.data)
+
+    products = Products.objects.all()
+
+    #searching products by name 
+
+    search = request.GET.get('search')
+    if search:
+        products = products.filter(name__icontains = search)
+    
+    #fetching the category 
+    category_id = request.GET.get("category")
+
+    if category_id: 
+        products = products.filter(category_id = category_id)
+
+    #geting the data if min and max price given
+    min_price = request.GET.get("min_price")
+    max_price = request.GET.get("max_price")
+
+    try:
+        if min_price:
+            products = products.filter(price__gte = min_price)
+        if max_price:
+            products = products.filter(price__lte = max_price)
+    except ValueError:
+        return Response({
+                "message" : "something wrong in the code"
+        },
+        status=status.HTTP_400_BAD_REQUEST
+        )
+    #checking if the stock is available
+
+    stock = request.GET.get('stock')
+    if stock:
+        products = products.filter(stock__gte = stock)
+    
+
+    #getting if the available or not 
+    is_available = request.GET.get('is_availabel')
+    if is_available is not None:
+        if is_available.lower == 'true':
+            products = products.filter(is_available = True)
+        elif is_available.lower == 'false':
+            products = products.filter(is_available = False)
+
+    serializer = ProductSerializer(products, many = True)
+    return Response(serializer.data)
+
+
 
 
 @api_view(['GET'])

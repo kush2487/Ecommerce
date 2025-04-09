@@ -18,10 +18,19 @@ from django.contrib import admin
 from django.urls import path
 # from Helloo_world import views 
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('hello_world', views.hello_world, name = 'hello_world'),
+    #products and category endpoint
     path('product_api/', include('products.urls')),
     path('category_api/', include('products.urls')),
+
+    #JWT token endpoints 
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    #Users endpint
+    path('auth/', include('users.urls')),
+
 ]
