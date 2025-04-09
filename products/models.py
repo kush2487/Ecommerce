@@ -1,5 +1,12 @@
 from django.db import models
-from django.utils.timezone import datetime
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return (self.name)
 
 # Create your models here.
 class Products(models.Model):
@@ -8,6 +15,14 @@ class Products(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2)
     # stock = models.IntegerField(default=)
     is_available = models.BooleanField(default=False)
+
+    category = models.ForeignKey(
+        'Category', 
+        on_delete=models.CASCADE,
+        related_name='products',
+        null= False
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

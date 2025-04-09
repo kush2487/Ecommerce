@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('hello_world', views.hello_world, name = 'hello_world'),
     path('product_api/', include('products.urls')),
+    path('category_api/', include('products.urls')),
 ]

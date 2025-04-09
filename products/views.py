@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import status
-from products.models import Products
+from products.models import Products,Category
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from products.serializers import ProductSerializer
+from products.serializers import ProductSerializer, CategorySerializer
 
 # # Create your views here. 
+
+
+# Product Views
 def changing_api(request):
     data = Products.objects.all()
     d = data[0]
@@ -82,4 +85,31 @@ def delete_product(request, id):
     
     product.delete()
     return Response({"message": "Product Deleted Sucessfully"}, status=status.HTTP_204_NO_CONTENT)
-    
+
+
+
+# Category Views 
+@api_view(['GET'])
+def get_all_category(request):
+    category = Category.objects.all()
+    serializer = CategorySerializer(category, many = True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def create_category(request):
+    serializer = CategorySerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def delete_category(request, id ):
+    try:
+        category = Category.objects.get(id = id)
+    except Category.DoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    category.delete()
+    return Response({"message":" Category Successfully Deleted Along with linked products"}, status=status.HTTP_204_NO_CONTENT)
