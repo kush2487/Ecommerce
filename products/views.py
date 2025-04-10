@@ -2,10 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import status
 from products.models import Products,Category
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from products.serializers import ProductSerializer, CategorySerializer
+
 
 # # Create your views here. 
 
@@ -88,6 +90,7 @@ def get_products_id(request, id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def creating_product(request):
     serializer = ProductSerializer(data = request.data)
     if serializer.is_valid():
@@ -98,6 +101,8 @@ def creating_product(request):
 
 
 @api_view(['PATCH'])
+# @permission_classes(['IsAuthenticated'])
+@permission_classes([IsAuthenticated])
 def update_product(request, id):
     try:
         product = Products.objects.get(id = id)
@@ -112,6 +117,8 @@ def update_product(request, id):
 
 
 @api_view(['PUT'])
+# @permission_classes(['IsAuthenticated'])
+@permission_classes([IsAuthenticated])
 def update_product_full(request, id):
     try:
         product = Products.objects.get(id = id)
@@ -126,6 +133,8 @@ def update_product_full(request, id):
 
 
 @api_view(['DELETE'])
+# @permission_classes(['IsAuthenticated'])
+@permission_classes([IsAuthenticated])
 def delete_product(request, id):
     try:
         product = Products.objects.get(id = id)
@@ -145,6 +154,8 @@ def get_all_category(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
+# @permission_classes(['IsAuthenticated'])
+@permission_classes([IsAuthenticated])
 def create_category(request):
     serializer = CategorySerializer(data = request.data)
     if serializer.is_valid():
@@ -154,6 +165,8 @@ def create_category(request):
 
 
 @api_view(['DELETE'])
+# @permission_classes(['IsAuthenticated'])
+@permission_classes([IsAuthenticated])
 def delete_category(request, id ):
     try:
         category = Category.objects.get(id = id)
