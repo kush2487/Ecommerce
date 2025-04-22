@@ -94,7 +94,7 @@ def get_products_id(request, id):
 def creating_product(request):
     serializer = ProductSerializer(data = request.data)
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(created_by = request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -175,3 +175,13 @@ def delete_category(request, id ):
 
     category.delete()
     return Response({"message":" Category Successfully Deleted Along with linked products"}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_my_product(request):
+    products = Products.objects.filter(created_by = request.user)
+
+    serializer = ProductSerializer(products, many = True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)

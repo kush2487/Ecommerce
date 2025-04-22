@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -21,6 +22,13 @@ class Products(models.Model):
         on_delete=models.CASCADE,
         related_name='products',
         null= True
+    )
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='users',
+        null=True
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
