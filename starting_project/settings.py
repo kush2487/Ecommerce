@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-^7^skib!x!e)eh$7523hped0f&ro1id8y#+fo0=@$ttx@g)v+t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+                    'ecommerce-env.eba-nqxeeyyq.ap-south-1.elasticbeanstalk.com',
+                    '127.0.0.1',
+                    'localhost',                
+                ]
 
 
 # Application definition
@@ -79,9 +83,19 @@ WSGI_APPLICATION = 'starting_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+
+
+        'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'Ecommerce',
+        'USER': 'product',
+        'PASSWORD': 'KUSHagra',
+        'HOST': 'database-1.c3csy4awux2w.ap-south-1.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 
